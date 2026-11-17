@@ -1,0 +1,110 @@
+{
+	"$comment": "Цены и коэффициенты конфигуратора. Формула: Σ длин × цена за пог. м × коэф. высоты × коэф. фасада × коэф. фурнитуры + столешница/наполнение + опции + монтаж.",
+	"heightBase": 2.4,
+	"heightFactor": 0.5,
+	"installPercent": 7,
+	"products": {
+		"kitchen": {
+			"label": "Кухня",
+			"pricePerMeter": 34000,
+			"height": { "min": 2.2, "max": 2.9, "step": 0.05, "default": 2.4 },
+			"layouts": [
+				{ "id": "straight", "label": "Прямая", "note": "Вдоль одной стены", "sides": ["A"] },
+				{ "id": "corner", "label": "Угловая", "note": "Г-образная, две стены", "sides": ["A", "B"] },
+				{ "id": "u", "label": "П-образная", "note": "Три стены", "sides": ["A", "B", "C"] }
+			],
+			"sides": {
+				"A": { "label": "Сторона A", "min": 1.2, "max": 5, "step": 0.1, "default": 3 },
+				"B": { "label": "Сторона B", "min": 1, "max": 4, "step": 0.1, "default": 1.8 },
+				"C": { "label": "Сторона C", "min": 1, "max": 4, "step": 0.1, "default": 1.6 }
+			}
+		},
+		"wardrobe": {
+			"label": "Шкаф",
+			"height": { "min": 2, "max": 3, "step": 0.05, "default": 2.5 },
+			"width": { "min": 1, "max": 5, "step": 0.1, "default": 2.4 },
+			"kinds": [
+				{ "id": "coupe", "label": "Шкаф-купе", "note": "Раздвижные двери", "pricePerMeter": 32000 },
+				{ "id": "hinged", "label": "Распашной", "note": "Классические двери", "pricePerMeter": 30000 },
+				{ "id": "walkin", "label": "Гардеробная", "note": "Открытая система", "pricePerMeter": 28000 },
+				{ "id": "hallway", "label": "Прихожая", "note": "Шкаф + ниша с банкеткой", "pricePerMeter": 30000 }
+			]
+		}
+	},
+	"facades": [
+		{
+			"id": "plastic",
+			"label": "Пластик",
+			"note": "Практичный, устойчив к влаге и царапинам",
+			"coef": 1,
+			"colors": [
+				{ "id": "white", "label": "Белый шёлк", "hex": "#F1EFEA" },
+				{ "id": "cashmere", "label": "Кашемир", "hex": "#D9CFC0" },
+				{ "id": "silk-grey", "label": "Серый шёлк", "hex": "#9C9A95" },
+				{ "id": "graphite", "label": "Графит", "hex": "#3B3F42" }
+			]
+		},
+		{
+			"id": "enamel",
+			"label": "МДФ-эмаль",
+			"note": "Глубокий матовый цвет, любой оттенок по каталогу",
+			"coef": 1.25,
+			"colors": [
+				{ "id": "warm-white", "label": "Тёплый белый", "hex": "#EEE8DE" },
+				{ "id": "sand", "label": "Песок", "hex": "#D6C7AF" },
+				{ "id": "sage", "label": "Шалфей", "hex": "#9AA38D" },
+				{ "id": "terracotta", "label": "Терракота", "hex": "#B5785B" },
+				{ "id": "navy", "label": "Глубокий синий", "hex": "#2F3A4A" },
+				{ "id": "graphite", "label": "Графит", "hex": "#33373A" }
+			]
+		},
+		{
+			"id": "veneer",
+			"label": "Шпон",
+			"note": "Натуральное дерево с живой текстурой",
+			"coef": 1.5,
+			"colors": [
+				{ "id": "oak", "label": "Дуб натуральный", "hex": "#C39A6B", "grain": true },
+				{ "id": "oak-white", "label": "Дуб беленый", "hex": "#DCCDB6", "grain": true },
+				{ "id": "oak-smoked", "label": "Дуб копчёный", "hex": "#7B5B3F", "grain": true },
+				{ "id": "walnut", "label": "Американский орех", "hex": "#5C4030", "grain": true }
+			]
+		}
+	],
+	"countertops": [
+		{ "id": "hpl", "label": "Пластик HPL", "note": "Влагостойкая основа, 38 мм", "pricePerMeter": 4500, "hex": "#CFC6B8" },
+		{ "id": "compact", "label": "Компакт-плита", "note": "Тонкая, 12 мм, не боится воды", "pricePerMeter": 9000, "hex": "#3A3D40" },
+		{ "id": "oak", "label": "Массив дуба", "note": "Тёплая, обновляется шлифовкой", "pricePerMeter": 14000, "hex": "#B88F62" },
+		{ "id": "quartz", "label": "Кварцевый агломерат", "note": "Камень без пор, 20 мм", "pricePerMeter": 22000, "hex": "#ECE9E3" }
+	],
+	"hardware": [
+		{ "id": "linea", "label": "Стандарт", "brand": "Linea", "note": "Петли и направляющие с гарантией 5 лет", "coef": 1 },
+		{ "id": "arteo", "label": "Комфорт", "brand": "Arteo", "note": "Ящики полного выдвижения, тихий ход", "coef": 1.08 },
+		{ "id": "klarr", "label": "Премиум", "brand": "Klarr", "note": "Сервоприводы push-to-open, нагрузка до 70 кг", "coef": 1.18 }
+	],
+	"filling": [
+		{ "id": "drawers", "label": "Выдвижные ящики", "note": "Блок из 3 ящиков", "price": 9000 },
+		{ "id": "pantograph", "label": "Пантограф", "note": "Опускаемая штанга для верхнего яруса", "price": 12000 },
+		{ "id": "trousers", "label": "Брючница", "note": "Выдвижная, на 10 вешалок", "price": 7500 },
+		{ "id": "shoes", "label": "Полки для обуви", "note": "Наклонные, 3 яруса", "price": 5000 },
+		{ "id": "baskets", "label": "Сетчатые корзины", "note": "Для белья и аксессуаров", "price": 6000 },
+		{ "id": "mirror", "label": "Зеркало внутри", "note": "На внутренней стороне двери", "price": 4000 }
+	],
+	"options": {
+		"kitchen": [
+			{ "id": "light", "label": "Подсветка рабочей зоны", "note": "LED-профиль под верхними шкафами", "perMeter": 2500 },
+			{ "id": "softclose", "label": "Доводчики на всё", "note": "Двери и ящики закрываются бесшумно", "perMeter": 3000 },
+			{ "id": "sink", "label": "Мойка и смеситель", "note": "Кварцевая мойка + смеситель", "price": 18000 }
+		],
+		"wardrobe": [
+			{ "id": "light", "label": "Внутренняя подсветка", "note": "Включается при открытии", "perMeter": 3000 },
+			{ "id": "softclose", "label": "Доводчики", "note": "Плавное закрытие дверей", "perMeter": 2500 },
+			{ "id": "mirrorDoors", "label": "Зеркальные двери", "note": "Бронзовое или серебряное зеркало", "perMeter": 6000, "only": ["coupe", "hinged", "hallway"] }
+		]
+	},
+	"appliances": [
+		{ "id": "none", "label": "Без техники", "note": "Своя или купите позже", "price": 0 },
+		{ "id": "base", "label": "Базовый комплект", "note": "Духовой шкаф, варочная панель, вытяжка", "price": 120000 },
+		{ "id": "premium", "label": "Премиум комплект", "note": "+ посудомойка, холодильник, СВЧ", "price": 260000 }
+	]
+}

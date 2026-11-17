@@ -1,0 +1,312 @@
+@import './lib/styles/fonts.css';
+@import 'tailwindcss';
+
+@theme {
+	--color-paper: #faf8f4;
+	--color-sand: #f2ede5;
+	--color-stone: #e7e0d5;
+	--color-line: #ddd5c9;
+	--color-graphite: #23272a;
+	--color-graphite-2: #2d3236;
+	--color-ink: #1c1f21;
+	--color-muted: #6f6a64;
+	--color-wood: #b08a5b;
+	--color-wood-light: #cdae85;
+	--color-wood-dark: #86663f;
+
+	--font-serif: 'Cormorant Garamond', 'Times New Roman', serif;
+	--font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--font-script: 'Great Vibes', 'Segoe Script', cursive;
+
+	--ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+	--ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+		-webkit-text-size-adjust: 100%;
+		scroll-padding-top: 72px;
+	}
+	body {
+		background: var(--color-paper);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		line-height: 1.6;
+		-webkit-font-smoothing: antialiased;
+		text-rendering: optimizeLegibility;
+		overflow-x: clip;
+	}
+	::selection {
+		background: var(--color-wood);
+		color: #fff;
+	}
+	:focus-visible {
+		outline: 1px solid var(--color-wood);
+		outline-offset: 3px;
+	}
+	button {
+		cursor: pointer;
+	}
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
+}
+
+@layer components {
+	.container-x {
+		width: 100%;
+		max-width: 1280px;
+		margin-inline: auto;
+		padding-inline: 1rem;
+	}
+	@media (min-width: 768px) {
+		.container-x {
+			padding-inline: 2rem;
+		}
+	}
+
+	/* мелкая капитель с разрядкой, как «HOW WE CAN HELP» в референсе */
+	.eyebrow {
+		font-family: var(--font-sans);
+		font-size: 0.6875rem;
+		font-weight: 600;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+	}
+	.eyebrow-line::after {
+		content: '';
+		display: block;
+		width: 1.25rem;
+		height: 1px;
+		margin-top: 0.6rem;
+		background: currentColor;
+		opacity: 0.4;
+	}
+
+	/* заголовок секции капителью, как «COLLECTIONS» */
+	.section-title {
+		font-family: var(--font-serif);
+		font-weight: 400;
+		font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+		line-height: 1.1;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+	.section-title-rule::after {
+		content: '';
+		display: block;
+		width: 3.5rem;
+		height: 1px;
+		margin: 1.1rem auto 0;
+		background: var(--color-wood);
+	}
+
+	.display {
+		font-family: var(--font-serif);
+		font-weight: 300;
+		line-height: 1.05;
+		letter-spacing: -0.01em;
+	}
+	.script {
+		font-family: var(--font-script);
+		font-weight: 400;
+		letter-spacing: 0;
+		text-transform: none;
+	}
+
+	/* огромное полупрозрачное слово на фоне */
+	.bg-word {
+		position: absolute;
+		pointer-events: none;
+		user-select: none;
+		white-space: nowrap;
+		font-family: var(--font-serif);
+		font-weight: 300;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		line-height: 0.8;
+		font-size: clamp(5rem, 19vw, 17rem);
+		color: currentColor;
+		opacity: 0.045;
+	}
+	/* слово рисуется псевдоэлементом: для скринридеров и Lighthouse это декор,
+	   а не текстовый контент с заведомо низким контрастом */
+	.bg-word [data-word]::before {
+		content: attr(data-word);
+	}
+
+	/* вертикальная линия-связка между секциями */
+	.vline {
+		display: block;
+		width: 1px;
+		background: currentColor;
+		opacity: 0.35;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+		min-height: 3rem;
+		padding: 0.9rem 1.75rem;
+		font-size: 0.6875rem;
+		font-weight: 600;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		transition:
+			background-color 0.4s var(--ease-soft),
+			color 0.4s var(--ease-soft),
+			border-color 0.4s var(--ease-soft),
+			transform 0.4s var(--ease-soft);
+	}
+	.btn-dark {
+		background: var(--color-graphite);
+		color: #fff;
+	}
+	.btn-dark:hover {
+		background: var(--color-wood-dark);
+	}
+	.btn-wood {
+		background: var(--color-wood-dark);
+		color: #fff;
+	}
+	.btn-wood:hover {
+		background: var(--color-graphite);
+	}
+	.btn-ghost {
+		border: 1px solid currentColor;
+	}
+	.btn-ghost:hover {
+		background: currentColor;
+	}
+	.btn-ghost:hover > * {
+		color: var(--color-graphite);
+	}
+	.btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	/* ссылка «— LEARN MORE» с кругом */
+	.link-circle {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 1rem;
+		padding-block: 0.5rem;
+		font-size: 0.6875rem;
+		font-weight: 600;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+	}
+	.link-circle::before {
+		content: '';
+		position: absolute;
+		left: -0.9rem;
+		top: 50%;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: 999px;
+		background: currentColor;
+		opacity: 0.07;
+		transform: translateY(-50%) scale(1);
+		transition: transform 0.5s var(--ease-expo);
+	}
+	.link-circle:hover::before {
+		transform: translateY(-50%) scale(1.25);
+	}
+	.link-circle .dash {
+		width: 1rem;
+		height: 1px;
+		background: currentColor;
+		transition: width 0.5s var(--ease-expo);
+	}
+	.link-circle:hover .dash {
+		width: 2rem;
+	}
+
+	/* рамка, смещённая от фото */
+	.frame {
+		position: relative;
+	}
+	.frame::before {
+		content: '';
+		position: absolute;
+		inset: -1.5rem -1.5rem 1.5rem 1.5rem;
+		border: 1px solid var(--color-wood-light);
+		pointer-events: none;
+	}
+	.frame-left::before {
+		inset: -1.5rem 1.5rem 1.5rem -1.5rem;
+	}
+
+	.field {
+		width: 100%;
+		border: 0;
+		border-bottom: 1px solid var(--color-line);
+		background: transparent;
+		padding: 0.85rem 0;
+		font-size: 1rem;
+		color: inherit;
+		border-radius: 0;
+		transition: border-color 0.3s;
+	}
+	.field::placeholder {
+		color: var(--color-muted);
+		opacity: 0.8;
+	}
+	.field:focus {
+		outline: none;
+		border-color: var(--color-wood);
+	}
+
+	/* появление при скролле (класс .is-in ставит action reveal) */
+	[data-reveal] {
+		opacity: 0;
+		transform: translateY(28px);
+		transition:
+			opacity 1s var(--ease-soft),
+			transform 1.1s var(--ease-expo);
+		transition-delay: var(--d, 0ms);
+	}
+	[data-reveal].is-in {
+		opacity: 1;
+		transform: none;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		[data-reveal] {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	/* фото с медленным зумом на hover */
+	.zoom-img img {
+		transition: transform 1.4s var(--ease-expo);
+	}
+	.zoom-img:hover img {
+		transform: scale(1.06);
+	}
+
+	.no-scrollbar {
+		scrollbar-width: none;
+	}
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+}
