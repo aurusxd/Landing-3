@@ -1,5 +1,7 @@
 // Тексты и справочники сайта
 
+const TELEGRAM_URL = 'https://t.me/anna_lumenmanager';
+
 export const site = {
 	name: 'Lignum',
 	tagline: 'Кухни и шкафы на заказ',
@@ -12,8 +14,11 @@ export const site = {
 	city: 'Москва',
 	street: 'ул. Столярная, 12',
 	hours: 'Ежедневно 10:00–20:00',
+	telegramHandle: '@anna_lumenmanager',
+	telegramUrl: TELEGRAM_URL,
+	manager: 'Анна, менеджер студии',
 	socials: {
-		telegram: 'https://t.me/lignum_studio',
+		telegram: TELEGRAM_URL,
 		vk: 'https://vk.com/lignum_studio',
 		whatsapp: 'https://wa.me/74951204567'
 	}
@@ -118,28 +123,6 @@ export const priceFactors = [
 	{ title: 'Столешница', text: 'От HPL-пластика до кварцевого агломерата.' },
 	{ title: 'Фурнитура', text: 'Петли, направляющие, системы открывания без ручек.' },
 	{ title: 'Наполнение и опции', text: 'Подсветка, техника, доводчики, внутренние системы хранения.' }
-];
-
-export const packages = [
-	{
-		name: 'Базовый',
-		price: 'от 38 000 ₽',
-		unit: 'за погонный метр',
-		items: ['Фасады из пластика, 4 цвета', 'Столешница HPL 38 мм', 'Фурнитура Linea', 'Корпус ЛДСП 18 мм', 'Гарантия 5 лет']
-	},
-	{
-		name: 'Оптимальный',
-		price: 'от 55 000 ₽',
-		unit: 'за погонный метр',
-		featured: true,
-		items: ['МДФ-эмаль, любой цвет', 'Компакт-плита 12 мм', 'Фурнитура Arteo, тихий ход', 'Ящики полного выдвижения', 'Гарантия 5 лет']
-	},
-	{
-		name: 'Премиум',
-		price: 'от 87 000 ₽',
-		unit: 'за погонный метр',
-		items: ['Натуральный шпон дуба или ореха', 'Кварцевый агломерат 20 мм', 'Фурнитура Klarr, push-to-open', 'LED-подсветка и доводчики', 'Гарантия 5 лет']
-	}
 ];
 
 export const materials = [

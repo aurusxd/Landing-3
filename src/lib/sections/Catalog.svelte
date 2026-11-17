@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Img from '#lib/components/Img.svelte';
 	import Icon from '#lib/components/Icon.svelte';
 	import { catalog } from '#lib/data/content.ts';
@@ -11,17 +12,36 @@
 	let canPrev = $state(false);
 	let canNext = $state(true);
 
+	const maxScroll = () => Math.max(0, track.scrollWidth - track.clientWidth);
+
 	function update() {
-		const max = track.scrollWidth - track.clientWidth;
+		const max = maxScroll();
 		progress = max > 0 ? track.scrollLeft / max : 1;
 		canPrev = track.scrollLeft > 4;
 		canNext = track.scrollLeft < max - 4;
 	}
 
 	function scrollBy(dir: 1 | -1) {
+		const max = maxScroll();
 		const card = track.querySelector('li');
-		track.scrollBy({ left: dir * ((card?.clientWidth ?? 300) + 24), behavior: 'smooth' });
+		const step = (card?.clientWidth ?? 300) + 24;
+		const target = Math.min(max, Math.max(0, track.scrollLeft + dir * step));
+		if (Math.abs(target - track.scrollLeft) < 2) return;
+
+		track.scrollTo({ left: target, behavior: 'smooth' });
+		// сразу фиксируем края, не дожидаясь окончания плавного скролла:
+		// иначе можно успеть нажать стрелку, которая уже ничего не сделает
+		progress = max > 0 ? target / max : 1;
+		canPrev = target > 4;
+		canNext = target < max - 4;
 	}
+
+	onMount(() => {
+		update();
+		const ro = new ResizeObserver(update);
+		ro.observe(track);
+		return () => ro.disconnect();
+	});
 
 	function choose(preset: Record<string, unknown>) {
 		configurator.apply(preset, 1);
@@ -49,10 +69,10 @@
 			class="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-[max(1rem,calc((100vw-1216px)/2))] pb-4"
 		>
 			{#each catalog as item, i (item.id)}
-				<li class="w-[78vw] shrink-0 snap-center sm:w-[46vw] lg:w-[34vw] xl:w-[440px]">
+				<li class="w-[78vw] shrink-0 snap-center sm:w-[46vw] lg:w-[34vw] xl:w-[380px]">
 					<a href="/#configurator" class="group block" onclick={() => choose(item.preset)}>
 						<div class="zoom-img relative">
-							<Img name={item.image} alt="{item.title} на заказ — проект студии Lignum" sizes="(min-width: 1280px) 440px, (min-width: 1024px) 34vw, 78vw" class="aspect-[4/5]" />
+							<Img name={item.image} alt="{item.title} на заказ — проект студии Lignum" sizes="(min-width: 1280px) 380px, (min-width: 1024px) 34vw, 78vw" class="aspect-[4/5]" />
 							<span class="absolute top-5 left-5 bg-ink/60 px-2 py-1 eyebrow text-white backdrop-blur-[2px]">0{i + 1}</span>
 							<span class="absolute right-0 bottom-0 grid size-14 place-items-center bg-graphite text-white transition duration-500 group-hover:bg-wood">
 								<Icon name="arrow" size={18} />

@@ -110,12 +110,14 @@
 				</ul>
 			</nav>
 			<a
-				href={site.phoneHref}
+				href={site.socials.telegram}
+				target="_blank"
+				rel="noopener"
 				class="grid size-10 place-items-center rounded-full border border-current/30 transition hover:border-current xl:hidden"
-				aria-label="Позвонить {site.phone}"
-				onclick={() => reachGoal('phone_click')}
+				aria-label="Написать в Telegram {site.telegramHandle}"
+				onclick={() => reachGoal('telegram_click', { source: 'header' })}
 			>
-				<Icon name="phone" size={16} />
+				<Icon name="telegram" size={16} />
 			</a>
 			<a href="/#configurator" class="btn btn-wood hidden !min-h-0 !px-5 !py-3 sm:inline-flex" onclick={() => reachGoal('configurator_open', undefined, { once: true })}>Рассчитать кухню</a>
 		</div>
@@ -146,6 +148,15 @@
 			<div class="mt-auto pt-12 text-white/70" in:fade={{ delay: 400 }}>
 				<a href={site.phoneHref} class="display block text-3xl text-white">{site.phone}</a>
 				<p class="mt-2 text-sm">{site.address} · {site.hours}</p>
+				<a
+					href={site.socials.telegram}
+					target="_blank"
+					rel="noopener"
+					class="mt-4 inline-flex items-center gap-2 text-sm text-wood-light"
+					onclick={() => reachGoal('telegram_click', { source: 'menu' })}
+				>
+					<Icon name="telegram" size={16} /> {site.telegramHandle}
+				</a>
 				<a href="/#configurator" class="btn btn-wood mt-8 w-full sm:w-auto" onclick={() => { open = false; reachGoal('configurator_open', undefined, { once: true }); }}>Рассчитать кухню</a>
 			</div>
 		</div>

@@ -17,7 +17,6 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"images:generate": "node scripts/generate-images.mjs",
 		"images:optimize": "node scripts/optimize-images.mjs",
-		"telegram:check": "node scripts/telegram-check.mjs",
 		"prepare": "svelte-kit sync || echo ''",
 		"fonts:fetch": "node scripts/fetch-fonts.mjs"
 	},

@@ -1,7 +1,7 @@
 // Цели Яндекс.Метрики. Если счётчик не задан (PUBLIC_YM_ID пуст), вызовы просто игнорируются.
 import { PUBLIC_YM_ID } from '$app/env/public';
 
-export type Goal = 'configurator_open' | 'configurator_step' | 'lead_sent' | 'phone_click';
+export type Goal = 'configurator_open' | 'configurator_step' | 'telegram_click' | 'phone_click';
 
 const fired = new Set<Goal>();
 

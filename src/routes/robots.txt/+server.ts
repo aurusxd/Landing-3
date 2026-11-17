@@ -7,7 +7,6 @@ export function GET() {
 	return new Response(
 		`User-agent: *
 Allow: /
-Disallow: /api/
 
 Host: ${host}
 Sitemap: ${PUBLIC_SITE_URL}/sitemap.xml

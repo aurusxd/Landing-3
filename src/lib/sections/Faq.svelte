@@ -2,6 +2,7 @@
 	import { slide } from 'svelte/transition';
 	import Icon from '#lib/components/Icon.svelte';
 	import { faq, site } from '#lib/data/content.ts';
+	import { reachGoal } from '#lib/analytics.ts';
 	import { reveal } from '#lib/actions.ts';
 
 	let open = $state<number | null>(0);
@@ -28,9 +29,9 @@
 			<p class="eyebrow eyebrow-line text-muted">FAQ</p>
 			<h2 id="faq-title" class="display mt-6 text-[clamp(2.25rem,4.6vw,3.75rem)]">Частые вопросы</h2>
 			<p class="script mt-10 text-4xl text-wood">Не нашли ответ?</p>
-			<p class="mt-3 max-w-xs text-sm text-muted">Позвоните или напишите — дизайнер ответит в течение 15 минут.</p>
+			<p class="mt-3 max-w-xs text-sm text-muted">Позвоните или напишите Анне — она ответит в течение 15 минут.</p>
 			<a href={site.phoneHref} class="display mt-6 block text-3xl transition hover:text-wood">{site.phone}</a>
-			<a href={site.socials.telegram} class="link-circle mt-6 ml-4" target="_blank" rel="noopener"><span class="dash"></span>Написать в Telegram</a>
+			<a href={site.socials.telegram} class="link-circle mt-6 ml-4" target="_blank" rel="noopener" onclick={() => reachGoal('telegram_click', { source: 'faq' })}><span class="dash"></span>Написать Анне в Telegram</a>
 		</div>
 
 		<dl class="border-t border-line" use:reveal={120}>

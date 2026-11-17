@@ -10,7 +10,7 @@
 	import { configurator, STEPS } from '#lib/configurator.svelte.ts';
 	import { activeSides, availableOptions, catalogData as D, fmtRub, type SideId } from '#lib/pricing.ts';
 	import { reachGoal } from '#lib/analytics.ts';
-	import { phoneMask, phoneValid, sendLead } from '#lib/lead.ts';
+	import { site } from '#lib/data/content.ts';
 	import { reveal } from '#lib/actions.ts';
 
 	const c = $derived(configurator.config);
@@ -63,29 +63,34 @@
 	const fmtPerMeter = (n: number) => `+${new Intl.NumberFormat('ru-RU').format(n)} ₽/м`;
 	const pct = (k: number) => (k === 1 ? 'базовая цена' : `+${Math.round((k - 1) * 100)}% к цене`);
 
-	// ---- форма заявки
-	let sending = $state(false);
-	let sent = $state(false);
-	let error = $state('');
-	const mountedAt = Date.now();
+	// ---- финал: без форм и персональных данных, только текст для Telegram
+	let copied = $state(false);
+	let copyTimer: ReturnType<typeof setTimeout> | undefined;
 
-	async function submit(e: SubmitEvent) {
-		e.preventDefault();
-		const form = e.currentTarget as HTMLFormElement;
-		const fd = new FormData(form);
-		error = '';
-		if (!String(fd.get('name')).trim()) return (error = 'Как к вам обращаться?');
-		if (!phoneValid(String(fd.get('phone')))) return (error = 'Проверьте номер телефона');
-		if (!fd.get('consent')) return (error = 'Нужно согласие на обработку данных');
-		fd.set('config', JSON.stringify($state.snapshot(configurator.config)));
-		fd.set('elapsed', String(Date.now() - mountedAt));
-		sending = true;
-		const res = await sendLead(fd, 'configurator');
-		sending = false;
-		if (res.ok) {
-			sent = true;
-			form.reset();
-		} else error = res.error;
+	async function copySummary() {
+		const text = [
+			'Конфигурация Lignum',
+			...configurator.summary.map(([k, v]) => `${k}: ${v}`),
+			`Ориентировочная стоимость: ${fmtRub(price.total)}`
+		].join('\n');
+		try {
+			await navigator.clipboard.writeText(text);
+		} catch {
+			const ta = document.createElement('textarea');
+			ta.value = text;
+			ta.style.position = 'fixed';
+			ta.style.opacity = '0';
+			document.body.appendChild(ta);
+			ta.select();
+			try {
+				document.execCommand('copy');
+			} finally {
+				ta.remove();
+			}
+		}
+		copied = true;
+		clearTimeout(copyTimer);
+		copyTimer = setTimeout(() => (copied = false), 2500);
 	}
 </script>
 
@@ -280,66 +285,65 @@
 									</div>
 								{/if}
 							{:else}
-								{#if sent}
-									<div class="py-10 text-center" in:fade>
-										<p class="script text-6xl text-wood">Спасибо!</p>
-										<h3 class="display mt-4 text-3xl">Расчёт у дизайнера</h3>
-										<p class="mx-auto mt-4 max-w-sm text-muted">Перезвоним в течение 15 минут в рабочее время, уточним детали и предложим удобное время замера.</p>
-										<button type="button" class="link-circle mt-10 ml-4" onclick={() => { sent = false; configurator.reset(); }}><span class="dash"></span>Новый расчёт</button>
-									</div>
-								{:else}
-									<h3 class="display text-3xl">Ваша конфигурация</h3>
-									<dl class="mt-6 divide-y divide-line border-y border-line">
-										{#each configurator.summary as [k, v]}
-											<div class="grid grid-cols-[7.5rem_1fr] gap-4 py-3 text-sm sm:grid-cols-[9rem_1fr]">
-												<dt class="text-muted">{k}</dt>
-												<dd>{v}</dd>
-											</div>
-										{/each}
-									</dl>
-									<form class="mt-8" onsubmit={submit} novalidate>
-										<p class="text-sm text-muted">Оставьте контакты — пришлём расчёт и перезвоним, чтобы уточнить детали.</p>
-										<div class="mt-4 grid gap-2 sm:grid-cols-2 sm:gap-6">
-											<label class="block"><span class="sr-only">Имя</span><input name="name" class="field" placeholder="Ваше имя" autocomplete="name" required maxlength="80" /></label>
-											<label class="block"><span class="sr-only">Телефон</span><input name="phone" type="tel" class="field" placeholder="+7 (___) ___-__-__" autocomplete="tel" required use:phoneMask /></label>
+								<h3 class="display text-3xl">Ваша конфигурация</h3>
+								<dl class="mt-6 divide-y divide-line border-y border-line">
+									{#each configurator.summary as [k, v]}
+										<div class="grid grid-cols-[7.5rem_1fr] gap-4 py-3 text-sm sm:grid-cols-[9rem_1fr]">
+											<dt class="text-muted">{k}</dt>
+											<dd>{v}</dd>
 										</div>
-										<!-- honeypot: поле для ботов, людям не видно -->
-										<div class="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
-											<label>Ваш сайт <input name="website" tabindex="-1" autocomplete="off" /></label>
-										</div>
-										<label class="mt-5 flex items-start gap-3 text-xs text-muted">
-											<input type="checkbox" name="consent" class="mt-0.5 size-4 accent-graphite" />
-											<span>Согласен на обработку персональных данных по <a href="/privacy" class="underline underline-offset-2 hover:text-ink">политике конфиденциальности</a></span>
-										</label>
-										{#if error}<p class="mt-4 text-sm text-[#a5452f]" role="alert">{error}</p>{/if}
-										<button type="submit" class="btn btn-dark mt-6 w-full" disabled={sending}>
-											{sending ? 'Отправляем…' : `Получить расчёт · ≈ ${fmtRub(price.total)}`}
-										</button>
-									</form>
-								{/if}
+									{/each}
+								</dl>
+
+								<div class="mt-8 bg-graphite p-6 text-white sm:p-8">
+									<p class="eyebrow text-wood-light">Следующий шаг</p>
+									<p class="display mt-3 text-2xl leading-snug sm:text-3xl">
+										Отправьте конфигурацию Анне — она уточнит детали и назовёт точную стоимость.
+									</p>
+									<a
+										href={site.socials.telegram}
+										target="_blank"
+										rel="noopener"
+										class="btn btn-wood mt-6 w-full"
+										onclick={() => reachGoal('telegram_click', { source: 'configurator' })}
+									>
+										Написать {site.telegramHandle} <Icon name="telegram" size={15} />
+									</a>
+									<button
+										type="button"
+										class="mt-3 w-full text-center text-xs text-white/60 underline underline-offset-4 transition hover:text-white"
+										onclick={copySummary}
+									>
+										{copied ? 'Скопировано — вставьте в Telegram' : 'Скопировать конфигурацию'}
+									</button>
+									<p class="sr-only" aria-live="polite">{copied ? 'Конфигурация скопирована' : ''}</p>
+									<p class="mt-5 text-xs leading-relaxed text-white/50">Цена ориентировочная. Точную стоимость Анна подтвердит после замера — расчёт бесплатный.</p>
+								</div>
+
+								<button type="button" class="link-circle mt-8 ml-4" onclick={() => configurator.reset()}>
+									<span class="dash"></span>Начать заново
+								</button>
 							{/if}
 						</div>
 					{/key}
 				</div>
 
-				{#if !(step === STEPS.length - 1 && sent)}
-					<div class="mt-10 border-t border-line pt-6">
-						<p class="mb-4 flex items-baseline justify-between gap-4 lg:hidden">
-							<span class="eyebrow text-muted">Итого</span>
-							<span class="display text-2xl tabular-nums">≈ {fmtRub(price.total)}</span>
-						</p>
-						<div class="flex items-center justify-between">
-							<button type="button" class="link-circle ml-4 disabled:opacity-30" onclick={() => go(step - 1)} disabled={step === 0}>
-								<Icon name="arrow-left" size={14} /> Назад
+				<div class="mt-10 border-t border-line pt-6">
+					<p class="mb-4 flex items-baseline justify-between gap-4 lg:hidden">
+						<span class="eyebrow text-muted">Итого</span>
+						<span class="display text-2xl tabular-nums">≈ {fmtRub(price.total)}</span>
+					</p>
+					<div class="flex items-center justify-between">
+						<button type="button" class="link-circle ml-4 disabled:opacity-30" onclick={() => go(step - 1)} disabled={step === 0}>
+							<Icon name="arrow-left" size={14} /> Назад
+						</button>
+						{#if step < STEPS.length - 1}
+							<button type="button" class="btn btn-dark" onclick={() => go(step + 1)}>
+								{step === STEPS.length - 2 ? 'К итогу' : 'Далее'} <Icon name="arrow" size={14} />
 							</button>
-							{#if step < STEPS.length - 1}
-								<button type="button" class="btn btn-dark" onclick={() => go(step + 1)}>
-									{step === STEPS.length - 2 ? 'К итогу' : 'Далее'} <Icon name="arrow" size={14} />
-								</button>
-							{/if}
-						</div>
+						{/if}
 					</div>
-				{/if}
+				</div>
 			</div>
 		</div>
 	</div>
