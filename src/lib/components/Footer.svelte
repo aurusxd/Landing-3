@@ -31,10 +31,25 @@
 			<div><p class="eyebrow mb-2 !text-[0.6rem] text-white/60">Шоурум</p><p>{site.address}<br />{site.hours}</p></div>
 		</div>
 
-		<div class="mt-16 flex w-full flex-col items-center justify-between gap-5 border-t border-white/10 pt-8 text-xs text-white/60 sm:flex-row">
-			<p>© {new Date().getFullYear()} Lignum. Цены на сайте не являются публичной офертой.</p>
-			<a href="/privacy" class="hover:text-white">Политика конфиденциальности</a>
-			<a href="#top" class="flex items-center gap-2 hover:text-white" onclick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Наверх <Icon name="arrow-up" size={14} /></a>
+		<div class="mt-16 w-full border-t border-white/10 pt-8">
+			<div class="flex flex-col items-center justify-between gap-5 text-xs text-white/60 sm:flex-row">
+				<p>© {new Date().getFullYear()} Lignum. Цены на сайте не являются публичной офертой.</p>
+				<a href="/privacy" class="hover:text-white">Политика конфиденциальности</a>
+				<a href="#top" class="flex items-center gap-2 hover:text-white" onclick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Наверх <Icon name="arrow-up" size={14} /></a>
+			</div>
+
+			<div class="mt-7 flex justify-center">
+				<a
+					href="https://popov-dev.ru"
+					target="_blank"
+					rel="noopener"
+					class="group inline-flex items-center gap-3 text-[0.68rem] tracking-[0.16em] text-white/60 uppercase transition hover:text-white"
+					aria-label="Сделал Никита Попов — сайт popov-dev.ru"
+				>
+					Сделал Никита Попов
+					<span class="h-px w-6 bg-current transition-all duration-500 group-hover:w-10" aria-hidden="true"></span>
+				</a>
+			</div>
 		</div>
 	</div>
 </footer>
