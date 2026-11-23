@@ -39,6 +39,5 @@
 				</li>
 			{/each}
 		</ul>
-		<p class="mt-12 text-center text-xs text-muted">Названия брендов условные — демонстрационный проект.</p>
 	</div>
 </section>
